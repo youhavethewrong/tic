@@ -19,6 +19,6 @@ public class TicTest {
 		double gearRatio = 3.166;
 		double engineRotation = 3000;
 		assertEquals(947.5679090334808,
-				tic.getTransRotation(engineRotation, gearRatio));
+				tic.getTransRotation(engineRotation, gearRatio), 0.001);
 	}
 }
