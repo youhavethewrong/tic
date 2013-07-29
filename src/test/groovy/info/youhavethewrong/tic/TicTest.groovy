@@ -1,9 +1,8 @@
-package info.youhavethewrong.tic;
+package info.youhavethewrong.tic
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.*
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.*
 
 public class TicTest {
 
@@ -13,7 +12,7 @@ public class TicTest {
 
 	@Before
 	public void setUp() {
-		tic = new Tic();
+		tic = new Tic()
 	}
 
 	@Test
@@ -22,7 +21,7 @@ public class TicTest {
 		double engineRotation = 3000;
 
 		assertEquals(947.5679090334808,
-				tic.getGearedRotation(engineRotation, gearRatio), CALCULATION_DELTA);
+				tic.getGearedRotation(engineRotation, gearRatio), CALCULATION_DELTA)
 	}
 
 	@Test
@@ -32,7 +31,7 @@ public class TicTest {
 		double engineRotation = 3000
 
 		assertEquals(914.7256189033537,
-				tic.getWheelRotationFromEngineRotation(engineRotation, 0.738, 4.444), CALCULATION_DELTA);
+				tic.getWheelRotationFromEngineRotation(engineRotation, 0.738, 4.444), CALCULATION_DELTA)
 	}
 
 	@Test
