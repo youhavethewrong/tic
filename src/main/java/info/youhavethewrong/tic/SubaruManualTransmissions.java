@@ -1,6 +1,7 @@
 package info.youhavethewrong.tic;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 
@@ -53,5 +54,17 @@ public class SubaruManualTransmissions {
 		transmissions.put("TY856WH3MA",new Transmission(new LinkedList<Double>(Arrays.asList(3.636,2.375,1.761,1.346,0.971,0.756)),3.900));
 		transmissions.put("TY856WH4MA",new Transmission(new LinkedList<Double>(Arrays.asList(3.636,2.375,1.761,1.346,0.971,0.756)),3.900));
 		transmissions.put("TY856WW6MA",new Transmission(new LinkedList<Double>(Arrays.asList(3.636,2.375,1.761,1.346,0.971,0.756)),3.900));
+	}
+
+	public Map<String, Transmission> getTransmissions() {
+		return transmissions;
+	}
+
+	public void setTransmissions(Map<String, Transmission> transmissions) {
+		this.transmissions = transmissions;
+	}
+
+	public Transmission lookupTransmissionByCode(String transmissionCode) {
+		return transmissions.get(transmissionCode);
 	}
 }

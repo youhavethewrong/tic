@@ -2,8 +2,7 @@ package info.youhavethewrong.tic;
 
 import static org.junit.Assert.*;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.*;
 
 public class SubaruManualTransmissionsTest {
 
@@ -14,13 +13,13 @@ public class SubaruManualTransmissionsTest {
 		smt = new SubaruManualTransmissions();
 	}
 
-	@Test
+	@Ignore
 	public void dumpTests() {
 		def tic = new Tic()
-		for (String key : smt.transmissions ) {
+		for (String key : smt.transmissions.keySet() ) {
 			println "Dumping RPMS for trans ${key}"
-			for (double ratio : smt.transmissions.get(key)) {
-				println tic.getWheelRotationFromEngineRotation(3000, ratio, smt.transmissions.get(key).axleRatio)
+			for (double ratio : smt.transmissions.get(key).transRatios) {
+				println "\t"+tic.getWheelRotationFromEngineRotation(3000, ratio, smt.transmissions.get(key).axleRatio)
 			}
 		}
 	}
