@@ -1,5 +1,8 @@
 package info.youhavethewrong.tic;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -45,5 +48,12 @@ public class TicResource {
 		}
 
 		return byCode;
+	}
+
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	@Path("all")
+	public List<String> getTransmissionList() {
+		return new LinkedList<String>(smt.getTransmissions().keySet());
 	}
 }
