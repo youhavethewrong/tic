@@ -13,5 +13,4 @@ logging:
 http:
 
     bindHost: localhost
-
-    port: 8091
+    port: 8999
