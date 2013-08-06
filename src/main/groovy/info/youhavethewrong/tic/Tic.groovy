@@ -10,15 +10,15 @@ public class Tic {
 		rotation/gearRatio
 	}
 
-	public double getWheelRotationFromEngineRotation(engineRotation, transRatio, axleRatio) {
-		engineRotation/transRatio/axleRatio
+	public double getWheelRotationFromEngineRotation(double engineRotation, double transRatio, double centerRatio, double axleRatio) {
+		engineRotation/transRatio/centerRatio/axleRatio
 	}
 
 	public double getLengthOfOneWheelRotation(sectionWidth, wheelSize) {
 		(sectionWidth*MM_TO_INCHES*2+wheelSize)*Math.PI/12
 	}
 
-	public double getVehicleSpeed(engineRotation, gearRatio, finalRatio, sectionWidth, wheelSize) {
-		getWheelRotationFromEngineRotation(engineRotation, gearRatio, finalRatio) * getLengthOfOneWheelRotation(sectionWidth, wheelSize) * SECONDS_TO_MINUTE / FEET_TO_MILE
+	public double getVehicleSpeed(double engineRotation, double transRatio, double centerRatio, double axleRatio, sectionWidth, wheelSize) {
+		getWheelRotationFromEngineRotation(engineRotation, transRatio, centerRatio, axleRatio) * getLengthOfOneWheelRotation(sectionWidth, wheelSize) * SECONDS_TO_MINUTE / FEET_TO_MILE
 	}
 }

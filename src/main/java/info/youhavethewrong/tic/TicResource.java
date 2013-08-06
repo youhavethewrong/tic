@@ -1,5 +1,6 @@
 package info.youhavethewrong.tic;
 
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -24,9 +25,11 @@ public class TicResource {
 			ListUtils.EMPTY_LIST, 0.00);
 
 	private SubaruManualTransmissions smt;
+	private Tic calc;
 
 	public TicResource() {
 		smt = new SubaruManualTransmissions();
+		calc = new Tic();
 	}
 
 	@GET
@@ -54,6 +57,49 @@ public class TicResource {
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("all")
 	public List<String> getTransmissionList() {
-		return new LinkedList<String>(smt.getTransmissions().keySet());
+
+		LinkedList<String> trans = new LinkedList<String>(smt
+				.getTransmissions().keySet());
+		Collections.sort(trans);
+
+		return trans;
+	}
+
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	@Path("{transmissionCode}/{rpm}")
+	public List<Double> getTransRotationsFromEngineSpeed(
+			@PathParam("transmissionCode") String transmissionCode,
+			@PathParam("rpm") String rpm) {
+
+		List<Double> rotations = new LinkedList<Double>();
+		Transmission transmission = smt
+				.lookupTransmissionByCode(transmissionCode);
+
+		for (Double ratio : transmission.getTransRatios()) {
+			rotations.add(calc.getGearedRotation(Double.valueOf(rpm), ratio));
+		}
+
+		return rotations;
+	}
+
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	@Path("{transmissionCode}/{rpm}/{tireSize}")
+	public List<Double> getWheelRotationsFromEngineSpeed(
+			@PathParam("transmissionCode") String transmissionCode,
+			@PathParam("rpm") String rpm) {
+
+		List<Double> rotations = new LinkedList<Double>();
+		Transmission transmission = smt
+				.lookupTransmissionByCode(transmissionCode);
+
+		for (Double ratio : transmission.getTransRatios()) {
+			rotations.add(calc.getWheelRotationFromEngineRotation(
+					Double.valueOf(rpm), ratio, transmission.getCenterRatio(),
+					transmission.getAxleRatio()));
+		}
+
+		return rotations;
 	}
 }

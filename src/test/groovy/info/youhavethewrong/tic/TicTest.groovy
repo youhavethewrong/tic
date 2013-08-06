@@ -31,7 +31,7 @@ public class TicTest {
 		double engineRotation = 3000
 
 		assertEquals(914.7256189033537,
-				tic.getWheelRotationFromEngineRotation(engineRotation, 0.738, 4.444), CALCULATION_DELTA)
+				tic.getWheelRotationFromEngineRotation(engineRotation, 0.738, 1.0, 4.444), CALCULATION_DELTA)
 	}
 
 	@Test
@@ -49,6 +49,6 @@ public class TicTest {
 		double finalRatio = 4.444
 		double engineRotation = 3000
 
-		assertEquals(67.7003830445444, tic.getVehicleSpeed(engineRotation, gearRatio, finalRatio, sectionWidth, wheelSize), CALCULATION_DELTA)
+		assertEquals(67.7003830445444, tic.getVehicleSpeed(engineRotation, gearRatio, 1.0, finalRatio, sectionWidth, wheelSize), CALCULATION_DELTA)
 	}
 }

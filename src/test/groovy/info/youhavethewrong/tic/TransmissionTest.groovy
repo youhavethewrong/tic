@@ -36,19 +36,19 @@ public class TransmissionTest {
 		double engineRotation = 3000;
 
 		assertEquals(218.964, tic.getWheelRotationFromEngineRotation(
-				engineRotation, trans.getTransRatios().get(0),
+				engineRotation, trans.getTransRatios().get(0), 1.0,
 				trans.getAxleRatio()), CALCULATION_DELTA);
 		assertEquals(327.384, tic.getWheelRotationFromEngineRotation(
-				engineRotation, trans.getTransRatios().get(1),
+				engineRotation, trans.getTransRatios().get(1), 1.0,
 				trans.getAxleRatio()), CALCULATION_DELTA);
 		assertEquals(436.936, tic.getWheelRotationFromEngineRotation(
-				engineRotation, trans.getTransRatios().get(2),
+				engineRotation, trans.getTransRatios().get(2), 1.0,
 				trans.getAxleRatio()), CALCULATION_DELTA);
 		assertEquals(586.505, tic.getWheelRotationFromEngineRotation(
-				engineRotation, trans.getTransRatios().get(3),
+				engineRotation, trans.getTransRatios().get(3), 1.0,
 				trans.getAxleRatio()), CALCULATION_DELTA);
 		assertEquals(818.264, tic.getWheelRotationFromEngineRotation(
-				engineRotation, trans.getTransRatios().get(4),
+				engineRotation, trans.getTransRatios().get(4), 1.0,
 				trans.getAxleRatio()), CALCULATION_DELTA);
 	}
 }
