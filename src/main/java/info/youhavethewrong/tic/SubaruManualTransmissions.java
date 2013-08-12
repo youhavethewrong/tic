@@ -7,8 +7,14 @@ import java.util.Map;
 
 public class SubaruManualTransmissions {
 	private Map<String, Transmission> transmissions = new HashMap<String, Transmission>();
+	private Map<String, Wheel> wheels = new HashMap<String, Wheel>();
 
 	public SubaruManualTransmissions() {
+		populateTransmissions();
+		populateWheels();
+	}
+	
+	private void populateTransmissions() {
 		//JDM 5MT from http://www.subarujdm.com/JDM_Subaru_Impreza_WRX_STi_Manual_transmission_ratio_chart.html
 		transmissions.put("TY752VB1AA",new Transmission(new LinkedList<Double>(Arrays.asList(3.545,2.111,1.448,1.088,0.825)),4.111, 1.0, "Subaru JDM 5MT"));
 		transmissions.put("TY752VB1BA",new Transmission(new LinkedList<Double>(Arrays.asList(3.545,2.111,1.448,1.088,0.825)),4.111, 1.0, "Subaru JDM 5MT"));
@@ -54,6 +60,18 @@ public class SubaruManualTransmissions {
 		transmissions.put("TY856WH3MA",new Transmission(new LinkedList<Double>(Arrays.asList(3.636,2.375,1.761,1.346,0.971,0.756)),3.900, 1.0, "Subaru JDM 6MT"));
 		transmissions.put("TY856WH4MA",new Transmission(new LinkedList<Double>(Arrays.asList(3.636,2.375,1.761,1.346,0.971,0.756)),3.900, 1.0, "Subaru JDM 6MT"));
 		transmissions.put("TY856WW6MA",new Transmission(new LinkedList<Double>(Arrays.asList(3.636,2.375,1.761,1.346,0.971,0.756)),3.900, 1.0, "Subaru JDM 6MT"));
+	}
+	
+	private void populateWheels() {
+		wheels.put("205w55r16", new Wheel(205d, 0.55, 16d));
+	}
+	
+	public Map<String, Wheel> getWheels() {
+		return wheels;
+	}
+	
+	public Wheel lookupWheelByCode(String wheelCode) {
+		return wheels.get(wheelCode);
 	}
 
 	public Map<String, Transmission> getTransmissions() {
