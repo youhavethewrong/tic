@@ -70,8 +70,7 @@ public class TicResource {
 	@Path("wheels/all")
 	public List<String> getWheelList() {
 
-		LinkedList<String> wheels = new LinkedList<String>(smt.getWheels()
-				.keySet());
+		LinkedList<String> wheels = new LinkedList<String>(smt.getWheels().keySet());
 		Collections.sort(wheels);
 
 		return wheels;
@@ -112,6 +111,30 @@ public class TicResource {
 			speeds.add(calc.getVehicleSpeed(Double.parseDouble(rpm), ratio,
 					transmission.getCenterRatio(), transmission.getAxleRatio(),
 					wheel.getAspectRatio()*wheel.getNominalSectionWidth(), wheel.getWheelDiameter()));
+		}
+
+		return speeds;
+        }
+
+        @GET
+        @Produces(MediaType.APPLICATION_JSON)
+        @Path("{transmissionCode}/{centerRatio}/{axleRatio}/{rpm}/{tireSize}")
+        public List<Double> getVehicleSpeedFromCustomFigures(
+			@PathParam("transmissionCode") String transmissionCode,
+			@PathParam("centerRatio") String centerRatio,
+			@PathParam("axleRatio") String axleRatio,
+			@PathParam("rpm") String rpm, @PathParam("tireSize") String tireSize) {
+                List<Double> speeds = new LinkedList<Double>();
+
+		Wheel wheel = smt.lookupWheelByCode(tireSize);
+
+		Transmission transmission = smt.lookupTransmissionByCode(transmissionCode);
+
+		for (Double ratio : transmission.getTransRatios()) {
+			speeds.add(calc.getVehicleSpeed(Double.parseDouble(rpm), ratio,
+					Double.parseDouble(centerRatio), Double.parseDouble(axleRatio),	
+					wheel.getAspectRatio()*wheel.getNominalSectionWidth(),
+					wheel.getWheelDiameter()));
 		}
 
 		return speeds;
