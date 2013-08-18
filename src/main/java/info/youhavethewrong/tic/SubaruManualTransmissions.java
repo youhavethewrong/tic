@@ -41,6 +41,7 @@ public class SubaruManualTransmissions {
 		transmissions.put("TY754VB1EA",new Transmission(new LinkedList<Double>(Arrays.asList(3.083,2.062,1.545,1.151,0.825)),4.444, 1.0, "Subaru JDM 5MT"));
 		transmissions.put("TY754VBAAA",new Transmission(new LinkedList<Double>(Arrays.asList(3.166,1.882,1.296,0.972,0.738)),4.444, 1.0, "Subaru JDM 5MT"));
 		transmissions.put("TY754VBACA",new Transmission(new LinkedList<Double>(Arrays.asList(3.166,1.882,1.296,0.972,0.738)),4.444, 1.0, "Subaru JDM 5MT"));
+		transmissions.put("S201",new Transmission(new LinkedList<Double>(Arrays.asList(3.083,2.062,1.545,1.151,0.825)),4.444, 1.0, "Subaru Impreza S201 STi 5MT"));
 
 		//JDM 6MT from http://www.subarujdm.com/JDM_Subaru_Impreza_WRX_STi_Manual_transmission_ratio_chart.html
 		transmissions.put("TY856WB1AA",new Transmission(new LinkedList<Double>(Arrays.asList(3.636,2.375,1.761,1.346,1.062,0.842)),3.900, 1.0, "Subaru JDM 6MT"));
@@ -60,10 +61,16 @@ public class SubaruManualTransmissions {
 		transmissions.put("TY856WH3MA",new Transmission(new LinkedList<Double>(Arrays.asList(3.636,2.375,1.761,1.346,0.971,0.756)),3.900, 1.0, "Subaru JDM 6MT"));
 		transmissions.put("TY856WH4MA",new Transmission(new LinkedList<Double>(Arrays.asList(3.636,2.375,1.761,1.346,0.971,0.756)),3.900, 1.0, "Subaru JDM 6MT"));
 		transmissions.put("TY856WW6MA",new Transmission(new LinkedList<Double>(Arrays.asList(3.636,2.375,1.761,1.346,0.971,0.756)),3.900, 1.0, "Subaru JDM 6MT"));
+		transmissions.put("S202",new Transmission(new LinkedList<Double>(Arrays.asList(3.636,2.375,1.761,1.346,1.062,0.842)),3.900, 1.0, "Subaru Impreza S202 STi 6MT"));
+		transmissions.put("2003SPECCL",new Transmission(new LinkedList<Double>(Arrays.asList(3.636,2.375,1.761,1.346,1.062,0.842)),3.900, 1.0, "Subaru Impreza WRX STi spec C Limited 2003 6MT"));
+		transmissions.put("2005SPECCV",new Transmission(new LinkedList<Double>(Arrays.asList(3.636,2.375,1.761,1.346,1.062,0.842)),3.900, 1.0, "Subaru Impreza WRX STI spec C V-Limited 2005 6MT"));
 	}
 	
 	private void populateWheels() {
+		wheels.put("205w50r16", new Wheel(205d, 0.50, 16d));
 		wheels.put("205w55r16", new Wheel(205d, 0.55, 16d));
+		wheels.put("225w45r17", new Wheel(225d, 0.45, 17d));
+		wheels.put("235w45r17", new Wheel(235d, 0.45, 17d));
 	}
 	
 	public Map<String, Wheel> getWheels() {
