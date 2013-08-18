@@ -55,7 +55,7 @@ public class TicResource {
 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	@Path("all")
+	@Path("trans/all")
 	public List<String> getTransmissionList() {
 
 		LinkedList<String> trans = new LinkedList<String>(smt
