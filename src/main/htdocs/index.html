@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Transmission Information Calculator</title>
+    <meta charset="utf8">
+    <link rel="stylesheet"
+          type="text/css"
+          href="//youhavethewrong.info/0.2/themes/bootstrap-responsive.min.css"/>
+    <link rel="stylesheet" 
+          type="text/css" 
+          href="//youhavethewrong.info/0.2/strapdown.css"/>
+    <link rel="stylesheet" 
+          type="text/css" 
+          href="//youhavethewrong.info/0.2/themes/readable.min.css"/>
+    <script src="jquery-1.10.2.min.js"></script>
+</head>
+<body style="">
+    <script>
+        $(document).ready(function () {
+
+            function getAllTrans() {
+                $.ajax({
+                    url: "//youhavethewrong.info/stic/trans/all",
+                    dataType: "json",
+                    success: function(data) {
+                         $.each(data, function() {
+                             $("#yourtrans").append('<option value="'+this+'">'+this+'</option>');
+                             $("#testtrans").append('<option value="'+this+'">'+this+'</option>');
+                        });
+                        updateTrans("#yourtrans", $("#yourtrans").val());
+                        rpmTableBatchUpdate("#yourtrans", $("#yourtrans").val());
+                        speedTableStandardBatchUpdate("#yourtrans", $("#yourtrans").val(), $("#yourtires").val());
+
+                        updateTrans("#testtrans", $("#testtrans").val());
+                        rpmTableBatchUpdate("#testtrans", $("#testtrans").val());
+                        speedTableStandardBatchUpdate("#testtrans", $("#testtrans").val(), $("#testtires").val());
+                    },
+                    error: function(xhf, s, t) {
+                        console.log(xhf);
+                    }
+                });
+            }
+
+            function getAllTireSizes() {
+                $.ajax({
+                    url: "//youhavethewrong.info/stic/wheels/all",
+                    dataType: "json",
+                    success: function(data) {
+                         $.each(data, function() {
+                             $("#yourtires").append('<option value="'+this+'">'+this+'</option>');
+                             $("#testtires").append('<option value="'+this+'">'+this+'</option>');
+                        });
+                    },
+                    error: function(xhf, s, t) {
+                        console.log(xhf);
+                    }
+                });
+            }
+
+            function updateSpeedTableModifiedDrivetrain(carTable, engineSpeed, transName, centerRatio, axleRatio, tireSpec) {
+                wipeSpeedTable(carTable);
+                $.ajax({
+                    url: "//youhavethewrong.info/stic/"+transName+"/"+centerRatio+"/"+axleRatio+"/"+engineSpeed+"/"+tireSpec,
+                    dataType: "json",
+                    success: function(data) {
+                        for (var i = 1; i <= data.length; i++) {
+                            $(carTable+engineSpeed+i).text((data[i-1]).toFixed(3));
+                        }
+                    },
+                    error: function(xhf, s, t) {
+                        console.log(xhf);
+                    }
+                });
+            }
+
+            function updateSpeedTable(carTable, engineSpeed, transName, tireSpec) {
+                wipeSpeedTable(carTable);
+                $.ajax({
+                    url: "//youhavethewrong.info/stic/"+transName+"/"+engineSpeed+"/"+tireSpec,
+                    dataType: "json",
+                    success: function(data) {
+                        for (var i = 1; i <= data.length; i++) {
+                            $(carTable+engineSpeed+i).text((data[i-1]).toFixed(3));
+                        }
+                    },
+                    error: function(xhf, s, t) {
+                        console.log(xhf);
+                    }
+                });
+            }
+
+            function wipeSpeedTable(carTable) {
+                for (var rpm = 2000; rpm <= 6500; rpm += 1500) {
+                    for (var i = 1; i <= 6; i++) {
+                        $(carTable+rpm+i).text("");
+                    }
+                }
+            }
+
+            function updateRpmTable(transTable, engineSpeed, transName) {
+                $.ajax({
+                    url: "//youhavethewrong.info/stic/"+transName+"/"+engineSpeed,
+                    dataType: "json",
+                    success: function(data) {
+                        for (var i = 1; i <= data.length; i++) {
+                            $(transTable+engineSpeed+i).text((data[i-1]).toFixed(3));
+                        }
+                    },
+                    error: function(xhf, s, t) {
+                        console.log(xhf);
+                    }
+                });
+            }
+
+            function wipeRpmTable(transTable) {
+                for (var rpm = 2000; rpm <= 6500; rpm += 1500) {
+                    for (var i = 1; i <= 6; i++) {
+                        $(transTable+rpm+i).text("");
+                    }
+                }
+            }
+
+            function updateTrans(transCol, transName) {
+               wipeRpmTable(transCol);
+                $.ajax({
+                    url: "//youhavethewrong.info/stic/"+transName,
+                    dataType: "json",
+                    success: function(data) {
+                        $(transCol+'Ratios').text(data.transRatios);
+                        $(transCol+'AxleRatio').val(data.axleRatio);
+                        $(transCol+'CenterRatio').val(data.centerRatio);
+                        $(transCol+'Notes').text(transName + " - " + data.notes);
+                    },
+                    error: function(xhf, s, t) {
+                        console.log(xhf);
+                    }
+                });
+            }
+
+            function rpmTableBatchUpdate(tableName, transName) {
+                updateRpmTable(tableName, '2000', transName);
+                updateRpmTable(tableName, '3500', transName);
+                updateRpmTable(tableName, '5000', transName);
+                updateRpmTable(tableName, '6500', transName);
+            }
+
+            function speedTableStandardBatchUpdate(tableName, transName, tireSpec) {
+                updateSpeedTable(tableName, '2000', transName, tireSpec);
+                updateSpeedTable(tableName, '3500', transName, tireSpec);
+                updateSpeedTable(tableName, '5000', transName, tireSpec);
+                updateSpeedTable(tableName, '6500', transName, tireSpec);
+            }
+
+            function speedTableModifiedDrivetrainBatchUpdate(tableName, transName, centerRatio, axleRatio, tireSpec) {
+                updateSpeedTableModifiedDrivetrain(tableName, '2000', transName, centerRatio, axleRatio, tireSpec);
+                updateSpeedTableModifiedDrivetrain(tableName, '3500', transName, centerRatio, axleRatio, tireSpec);
+                updateSpeedTableModifiedDrivetrain(tableName, '5000', transName, centerRatio, axleRatio, tireSpec);
+                updateSpeedTableModifiedDrivetrain(tableName, '6500', transName, centerRatio, axleRatio, tireSpec);
+            }
+
+            function yourtransListener() {
+                $("#yourtrans").change(function() {
+                    updateTrans('#yourtrans', $(this).val());
+                    rpmTableBatchUpdate('#yourtrans', $(this).val());
+                    speedTableStandardBatchUpdate('#yourcar', $(this).val(), $("#yourtires").val());
+                });
+            }
+
+            function testtransListener() {
+                $("#testtrans").change(function() {
+                    updateTrans('#testtrans', $(this).val());
+                    rpmTableBatchUpdate('#testtrans', $(this).val());
+                    speedTableStandardBatchUpdate('#testcar', $(this).val(), $("#testtires").val());
+                });
+            }
+
+
+            // TODO clean up all this duplication
+            function yourtransAxleRatioListener() {
+                $("#yourtransAxleRatio").change(function() {
+                    speedTableModifiedDrivetrainBatchUpdate("#yourcar", $("#yourtrans").val(), $("#yourtransCenterRatio").val(), $(this).val(), $("#yourtires").val());
+                });
+            }
+
+            function testtransAxleRatioListener() {
+                $("#testtransAxleRatio").change(function() {
+                    speedTableModifiedDrivetrainBatchUpdate("#testcar", $("#testtrans").val(), $("#testtransCenterRatio").val(), $(this).val(), $("#testtires").val());
+                });
+            }
+
+            function yourtransCenterRatioListener() {
+                $("#yourtransCenterRatio").change(function() {
+                    speedTableModifiedDrivetrainBatchUpdate("#yourcar", $("#yourtrans").val(), $(this).val(), $("#yourtransAxleRatio").val(), $("#yourtires").val());
+                });
+            }
+
+            function testtransCenterRatioListener() {
+                $("#testtransCenterRatio").change(function() {
+                    speedTableModifiedDrivetrainBatchUpdate("#testcar", $("#testtrans").val(), $(this).val(), $("#testtransAxleRatio").val(), $("#testtires").val());
+                });
+            }
+
+            function yourtransTireSizeListener() {
+                $("#yourtires").change(function() {
+                    speedTableModifiedDrivetrainBatchUpdate("#yourcar", $("#yourtrans").val(), $("#yourtransCenterRatio").val(), $("#yourtransAxleRatio").val(), $(this).val());
+                });
+            }
+
+            function testtransTireSizeListener() {
+                $("#testtires").change(function() {
+                    speedTableModifiedDrivetrainBatchUpdate("#testcar", $("#testtrans").val(), $("#testtransCenterRatio").val(), $("#testtransAxleRatio").val(), $(this).val());
+                });
+            }
+
+
+            function init() {
+                yourtransListener();
+                testtransListener();
+                yourtransAxleRatioListener();
+                testtransAxleRatioListener();
+                yourtransCenterRatioListener();
+                testtransCenterRatioListener();
+                yourtransTireSizeListener();
+                testtransTireSizeListener();
+                getAllTrans();
+                getAllTireSizes();
+            }
+
+            init();
+        });
+    </script>
+
+    <div class="navbar navbar-fixed-top"><div class="navbar-inner"> <div class="container"> <div class="brand" id="headline"><a href="//youhavethewrong.info">YouHaveTheWrong.info</a></div> </div> </div></div>
+    <div id="content" class="container">
+    <div id="h1"><h1>Transmission Information Calculator</h1></div>
+
+    <p>
+        This calculator will help you compare the forward gear ratios, transfer gear ratio, and final drive ratios of two different Subaru transmissions.  All data has been checked against multiple sources for accuracy, but please contact me if you notice any discrepancies.
+    </p>
+
+    <div id="h2"><h2>Transmission Information</h2></div>
+    <table id="info" class="table">
+        <tr>
+            <td>
+                <label for="yourtrans">Select a Subaru transmission</label>
+                <select id="yourtrans"></select>
+            </td>
+            <td>
+                <label for="testtrans">Select a Subaru transmission</label>
+                <select id="testtrans"></select>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <span id="yourtransNotes"></span><br/>
+                <span class="text-info">Blue below</span>
+            </td>
+            <td>
+                <span id="testtransNotes"></span><br/>
+                <span>White below</span>
+            </td>
+         </tr>
+        <tr>
+            <td>
+                <label for="yourtransRatios">Transmission forward gear ratios</label>
+                <span id="yourtransRatios"></span>
+            </td>
+            <td>
+                <label for="testtransRatios">Transmission forward gear ratios</label>
+                <span id="testtransRatios"></span>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <label for="yourtransCenterRatio">Transfer gear ratio</label>
+                <select id="yourtransCenterRatio"><option value="1.1">1.1</option><option value="1">1</option></select>
+            </td>
+            <td>
+                <label for="testtransCenterRatio">Transfer gear ratio</label>
+                <select id="testtransCenterRatio"><option value="1.1">1.1</option><option value="1">1</option></select>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <label for="yourtransAxleRatio">Axle ratio (Final drive)</label>
+                <select id="yourtransAxleRatio"><option value="3.9">3.9</option><option value="4.111">4.111</option><option value="4.444">4.444</option></select>
+            </td>
+            <td>
+                <label for="testtransAxleRatio">Axle ratio (Final drive)</label>
+                <select id="testtransAxleRatio"><option value="3.9">3.9</option><option value="4.111">4.111</option><option value="4.444">4.444</option></select>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <label for="yourtires">Tire Size</label>
+                <select id="yourtires"></select>
+            </td>
+            <td>
+                <label for="testtires">Tire Size</label>
+                <select id="testtires"></select>
+            </td>
+        </tr>
+    </table>
+
+    <div id="h2"><h2>Transmission RPM given Engine RPM</h2></div>
+    <table id="calc" class="table">
+        <th>
+            <span id="yourtransSpeed">Engine RPM</span>
+        </th>
+        <th>
+            <span id="yourtransSpeed">1st Gear</span>
+        </th>
+        <th>
+            <span id="yourtransSpeed">2nd Gear</span>
+        </th>
+        <th>
+            <span id="yourtransSpeed">3rd Gear</span>
+        </th>
+        <th>
+            <span id="yourtransSpeed">4th Gear</span>
+        </th>
+        <th>
+            <span id="yourtransSpeed">5th Gear</span>
+        </th>
+        <th>
+            <span id="yourtransSpeed">6th Gear</span>
+        </th>
+        <tr>
+            <tr class="info">
+                <td>
+                    <span id="2kLabel">2000</span>
+                </td>
+                <td>
+                    <span id="yourtrans20001"></span>
+                </td>
+                <td>
+                    <span id="yourtrans20002"></span>
+                </td>
+                <td>
+                    <span id="yourtrans20003"></span>
+                </td>
+                <td>
+                    <span id="yourtrans20004"></span>
+                </td>
+                <td>
+                    <span id="yourtrans20005"></span>
+                </td>
+                <td>
+                    <span id="yourtrans20006"></span>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                </td>
+                <td>
+                    <span id="testtrans20001"></span>
+                </td>
+                <td>
+                    <span id="testtrans20002"></span>
+                </td>
+                <td>
+                    <span id="testtrans20003"></span>
+                </td>
+                <td>
+                    <span id="testtrans20004"></span>
+                </td>
+                <td>
+                    <span id="testtrans20005"></span>
+                </td>
+                <td>
+                    <span id="testtrans20006"></span>
+                </td>
+            </tr>
+        </tr>
+        <tr>
+            <tr class="info">
+                <td>
+                    <span id="3kLabel">3500</span>
+                </td>
+                <td>
+                    <span id="yourtrans35001"></span>
+                </td>
+                <td>
+                    <span id="yourtrans35002"></span>
+                </td>
+                <td>
+                    <span id="yourtrans35003"></span>
+                </td>
+                <td>
+                    <span id="yourtrans35004"></span>
+                </td>
+                <td>
+                    <span id="yourtrans35005"></span>
+                </td>
+                <td>
+                    <span id="yourtrans35006"></span>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                </td>
+                <td>
+                    <span id="testtrans35001"></span>
+                </td>
+                <td>
+                    <span id="testtrans35002"></span>
+                </td>
+                <td>
+                    <span id="testtrans35003"></span>
+                </td>
+                <td>
+                    <span id="testtrans35004"></span>
+                </td>
+                <td>
+                    <span id="testtrans35005"></span>
+                </td>
+                <td>
+                    <span id="testtrans35006"></span>
+                </td>
+            </tr>
+        </tr>
+        <tr>
+            <tr class="info">
+                <td>
+                    <span id="5kLabel">5000</span>
+                </td>
+                <td>
+                    <span id="yourtrans50001"></span>
+                </td>
+                <td>
+                    <span id="yourtrans50002"></span>
+                </td>
+                <td>
+                    <span id="yourtrans50003"></span>
+                </td>
+                <td>
+                    <span id="yourtrans50004"></span>
+                </td>
+                <td>
+                    <span id="yourtrans50005"></span>
+                </td>
+                <td>
+                    <span id="yourtrans50006"></span>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                </td>
+                <td>
+                    <span id="testtrans50001"></span>
+                </td>
+                <td>
+                    <span id="testtrans50002"></span>
+                </td>
+                <td>
+                    <span id="testtrans50003"></span>
+                </td>
+                <td>
+                    <span id="testtrans50004"></span>
+                </td>
+                <td>
+                    <span id="testtrans50005"></span>
+                </td>
+                <td>
+                    <span id="testtrans50006"></span>
+                </td>
+            </tr>
+        </tr>
+        <tr>
+            <tr class="info">
+                <td>
+                    <span id="6kLabel">6500</span>
+                </td>
+                <td>
+                    <span id="yourtrans65001"></span>
+                </td>
+                <td>
+                    <span id="yourtrans65002"></span>
+                </td>
+                <td>
+                    <span id="yourtrans65003"></span>
+                </td>
+                <td>
+                    <span id="yourtrans65004"></span>
+                </td>
+                <td>
+                    <span id="yourtrans65005"></span>
+                </td>
+                <td>
+                    <span id="yourtrans65006"></span>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                </td>
+                <td>
+                    <span id="testtrans65001"></span>
+                </td>
+                <td>
+                    <span id="testtrans65002"></span>
+                </td>
+                <td>
+                    <span id="testtrans65003"></span>
+                </td>
+                <td>
+                    <span id="testtrans65004"></span>
+                </td>
+                <td>
+                    <span id="testtrans65005"></span>
+                </td>
+                <td>
+                    <span id="testtrans65006"></span>
+                </td>
+            </tr>
+        </tr>
+     </table>
+
+    <div id="h2"><h2>Vehicle Speed (MPH) given Engine RPM</h2></div>
+    <table id="speedcalc" class="table">
+        <th>
+            <span>Engine RPM</span>
+        </th>
+        <th>
+            <span>1st Gear</span>
+        </th>
+        <th>
+            <span>2nd Gear</span>
+        </th>
+        <th>
+            <span>3rd Gear</span>
+        </th>
+        <th>
+            <span>4th Gear</span>
+        </th>
+        <th>
+            <span>5th Gear</span>
+        </th>
+        <th>
+            <span>6th Gear</span>
+        </th>
+        <tr>
+            <tr class="info">
+                <td>
+                    <span id="2kLabel">2000</span>
+                </td>
+                <td>
+                    <span id="yourcar20001"></span>
+                </td>
+                <td>
+                    <span id="yourcar20002"></span>
+                </td>
+                <td>
+                    <span id="yourcar20003"></span>
+                </td>
+                <td>
+                    <span id="yourcar20004"></span>
+                </td>
+                <td>
+                    <span id="yourcar20005"></span>
+                </td>
+                <td>
+                    <span id="yourcar20006"></span>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                </td>
+                <td>
+                    <span id="testcar20001"></span>
+                </td>
+                <td>
+                    <span id="testcar20002"></span>
+                </td>
+                <td>
+                    <span id="testcar20003"></span>
+                </td>
+                <td>
+                    <span id="testcar20004"></span>
+                </td>
+                <td>
+                    <span id="testcar20005"></span>
+                </td>
+                <td>
+                    <span id="testcar20006"></span>
+                </td>
+            </tr>
+        </tr>
+        <tr>
+            <tr class="info">
+                <td>
+                    <span id="3kLabel">3500</span>
+                </td>
+                <td>
+                    <span id="yourcar35001"></span>
+                </td>
+                <td>
+                    <span id="yourcar35002"></span>
+                </td>
+                <td>
+                    <span id="yourcar35003"></span>
+                </td>
+                <td>
+                    <span id="yourcar35004"></span>
+                </td>
+                <td>
+                    <span id="yourcar35005"></span>
+                </td>
+                <td>
+                    <span id="yourcar35006"></span>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                </td>
+                <td>
+                    <span id="testcar35001"></span>
+                </td>
+                <td>
+                    <span id="testcar35002"></span>
+                </td>
+                <td>
+                    <span id="testcar35003"></span>
+                </td>
+                <td>
+                    <span id="testcar35004"></span>
+                </td>
+                <td>
+                    <span id="testcar35005"></span>
+                </td>
+                <td>
+                    <span id="testcar35006"></span>
+                </td>
+            </tr>
+        </tr>
+        <tr>
+            <tr class="info">
+                <td>
+                    <span id="5kLabel">5000</span>
+                </td>
+                <td>
+                    <span id="yourcar50001"></span>
+                </td>
+                <td>
+                    <span id="yourcar50002"></span>
+                </td>
+                <td>
+                    <span id="yourcar50003"></span>
+                </td>
+                <td>
+                    <span id="yourcar50004"></span>
+                </td>
+                <td>
+                    <span id="yourcar50005"></span>
+                </td>
+                <td>
+                    <span id="yourcar50006"></span>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                </td>
+                <td>
+                    <span id="testcar50001"></span>
+                </td>
+                <td>
+                    <span id="testcar50002"></span>
+                </td>
+                <td>
+                    <span id="testcar50003"></span>
+                </td>
+                <td>
+                    <span id="testcar50004"></span>
+                </td>
+                <td>
+                    <span id="testcar50005"></span>
+                </td>
+                <td>
+                    <span id="testcar50006"></span>
+                </td>
+            </tr>
+        </tr>
+        <tr>
+            <tr class="info">
+                <td>
+                    <span id="6kLabel">6500</span>
+                </td>
+                <td>
+                    <span id="yourcar65001"></span>
+                </td>
+                <td>
+                    <span id="yourcar65002"></span>
+                </td>
+                <td>
+                    <span id="yourcar65003"></span>
+                </td>
+                <td>
+                    <span id="yourcar65004"></span>
+                </td>
+                <td>
+                    <span id="yourcar65005"></span>
+                </td>
+                <td>
+                    <span id="yourcar65006"></span>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                </td>
+                <td>
+                    <span id="testcar65001"></span>
+                </td>
+                <td>
+                    <span id="testcar65002"></span>
+                </td>
+                <td>
+                    <span id="testcar65003"></span>
+                </td>
+                <td>
+                    <span id="testcar65004"></span>
+                </td>
+                <td>
+                    <span id="testcar65005"></span>
+                </td>
+                <td>
+                    <span id="testcar65006"></span>
+                </td>
+            </tr>
+        </tr>
+     </table>
+
+    </div>
+
+    <div id="content" class="container">
+        <script type="text/javascript"><!--
+            google_ad_client = "ca-pub-9701946558607917";
+            /* TicLeaderboard */
+            google_ad_slot = "3438068481";
+            google_ad_width = 728;
+            google_ad_height = 90;
+            //-->
+            </script>
+            <script type="text/javascript"
+            src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+        </script>
+    </div>
+    <div class="modal-footer">
+        Donate bitcoins to <strong>1K8DwdDBG7apvTetozUuhDGZ95WgcFCX88</strong> if this tool is helpful.<br/>
+        <a href="//youhavethewrong.info/">HOME</a></div>
+    </div>
+
+</body>
+</html>
